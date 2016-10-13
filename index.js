@@ -4,18 +4,24 @@ var uppercaseStream = require('./lib/uppercase_stream').uppercaseStream
 exports.handler = function (event, context) {
   var convert = function(bucket, fileKey) {
     var s3 = new aws.S3({ signatureVersion: 'v4' });
-    var stream;
 
-    stream = s3.getObject({
-      Bucket: bucket,
-      Key: fileKey
-    }).createReadStream();
-    stream.setEncoding('utf8');
+    var readAsStream = function(bucket, fileKey){
+      var stream = s3.getObject({
+        Bucket: bucket,
+        Key: fileKey
+      }).createReadStream();
+      stream.setEncoding('utf8');
+
+      return stream;
+    }
+
+    var stream = readAsStream(bucket, fileKey)
+    var uppercasedStream = uppercaseStream(stream)
 
     s3.upload({
       Bucket: bucket,
       Key: fileKey.replace(/^in/, 'out'),
-      Body: uppercaseStream(stream),
+      Body: uppercasedStream,
       ACL: 'private'
     }, context.done);
   },
