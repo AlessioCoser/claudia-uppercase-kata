@@ -1,5 +1,5 @@
-var aws = require('aws-sdk');
 var assert = require('assert')
+var testUtils = require('../test_utils')
 
 var bucketName = "claudia-uppercase-kata"
 var inputFileName = "inputfile.txt"
@@ -13,68 +13,12 @@ describe('Uppercase Bucket Stream', function(){
     var inputContent = "lorem ipsum dolor sit amet."
     var uppercasedContent = "LOREM IPSUM DOLOR SIT AMET."
 
-    return deleteS3Object(bucketName, inputFileName)
-    .then(() => deleteS3Object(bucketName, outputFileName))
-    .then(() => putS3Object(bucketName, inputFileName, inputContent))
-    .then(() => waitUntilS3ObjectExists(bucketName, outputFileName))
+    return testUtils.deleteS3Object(bucketName, inputFileName)
+    .then(() => testUtils.deleteS3Object(bucketName, outputFileName))
+    .then(() => testUtils.putS3Object(bucketName, inputFileName, inputContent))
+    .then(() => testUtils.waitUntilS3ObjectExists(bucketName, outputFileName))
     .then((data) => {
       assert.equal(data.Body.toString(), uppercasedContent)
     })
   })
 })
-
-
-function deleteS3Object(bucket, key) {
-  var s3 = new aws.S3({ signatureVersion: 'v4' })
-
-  return new Promise((resolve, reject) => {
-    console.log('-- delete s3 object', bucket, key)
-    s3.deleteObject({
-      Bucket: bucket,
-      Key: key,
-    }, (err, data) => err ? reject(err) : resolve(data) )
-  })
-}
-
-function putS3Object(bucket, key, body) {
-  var s3 = new aws.S3({ signatureVersion: 'v4' })
-  return new Promise((resolve, reject) => {
-    console.log('-- put s3 object', bucket, key)
-    s3.putObject({
-      Bucket: bucket,
-      Key: key,
-      Body: body
-    }, (err, data) => err ? reject(err) : resolve(data) )
-  })
-}
-
-function readS3Object(bucket, key) {
-  var s3 = new aws.S3({ signatureVersion: 'v4' })
-
-  return new Promise((resolve, reject) => {
-    console.log('-- read s3 object', bucket, key)
-    var stream = s3.getObject({
-      Bucket: bucket,
-      Key: key
-    }, (err, data) => err ? reject(err) : resolve(data) )
-  })
-}
-
-function waitUntilS3ObjectExists(bucket, key) {
-  return new Promise((resolve, reject) => {
-    var retries = 0
-    var intervalId = setInterval(() => {
-      console.log('-- waiting until s3 object exists', bucket, key)
-      readS3Object(bucket, key)
-      .then(resolve)
-      .catch(() => {
-        console.log('-- retries', retries)
-        if(retries > 10) {
-          reject(new Error(`file (${key}) not found in bucket (${bucket})`))
-          clearInterval(intervalId)
-        }
-      })
-      retries++
-    }, 1000)
-  })
-}
