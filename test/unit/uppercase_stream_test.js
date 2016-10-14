@@ -1,7 +1,7 @@
 var aws = require('aws-sdk');
 var assert = require('assert')
 
-var uppercaseStream = require("../../lib/uppercase_stream").uppercaseStream
+var uppercaseStream = require("../../lib/uppercase_stream")
 
 var Stream = require('stream');
 

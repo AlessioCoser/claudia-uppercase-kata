@@ -1,5 +1,5 @@
 var aws = require('aws-sdk');
-var uppercaseStream = require('./lib/uppercase_stream').uppercaseStream
+var uppercaseStream = require('./lib/uppercase_stream')
 
 exports.handler = function (event, context) {
   var convert = function(bucket, fileKey) {
