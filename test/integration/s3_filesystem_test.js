@@ -1,5 +1,6 @@
 var aws = require('aws-sdk');
 var assert = require('assert')
+var Stream = require('stream');
 var testUtils = require('../test_utils')
 var S3FileSystem = require('../../lib/s3_filesystem')
 
@@ -17,11 +18,13 @@ describe('S3FileSystem', function(){
     testUtils.deleteS3Object(bucketName, inputFileName)
     .then(() => testUtils.putS3Object(bucketName, inputFileName, inputContent))
     .then(() => {
-      s3FileSystem = new S3FileSystem()
-      stream = s3FileSystem.readAsStream(inputFileName, bucketName)
+      var s3FileSystem = new S3FileSystem()
+      var data = []
 
-      stream.on('data', function(chunk) {
-        assert.equal(chunk.toString(), "lorem ipsum dolor sit amet.")
+      s3FileSystem.readAsStream(inputFileName, bucketName)
+      .on('data', (chunk) => data.push(chunk))
+      .on('end', () => {
+        assert.equal(String.prototype.concat(data), "lorem ipsum dolor sit amet.")
         done()
       })
     })
