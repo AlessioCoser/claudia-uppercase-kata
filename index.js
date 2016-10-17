@@ -6,16 +6,11 @@ exports.handler = function (event, context) {
   var convert = function(bucket, fileKey) {
     var s3 = new aws.S3({ signatureVersion: 'v4' });
     var s3FileSystem = new S3FileSystem()
+    var newFileKey = fileKey.replace(/^in/, 'out')
 
     var stream = s3FileSystem.readAsStream(fileKey, bucket)
     var uppercasedStream = uppercaseStream(stream)
-
-    s3.upload({
-      Bucket: bucket,
-      Key: fileKey.replace(/^in/, 'out'),
-      Body: uppercasedStream,
-      ACL: 'private'
-    }, context.done);
+    s3FileSystem.writeAsStream(newFileKey, bucket, uppercasedStream, context.done)
   },
   eventRecord = event.Records && event.Records[0];
 

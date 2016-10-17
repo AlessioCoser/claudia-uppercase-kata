@@ -1,3 +1,4 @@
+var fs = require('fs');
 var aws = require('aws-sdk');
 var assert = require('assert')
 var Stream = require('stream');
@@ -29,4 +30,25 @@ describe('S3FileSystem', function(){
       })
     })
   })
+
+  it('writes to S3 Bucket', function () {
+    this.timeout(10000)
+    var s3FileSystem = new S3FileSystem()
+    var aStream = fs.createReadStream('./inputfile.txt')
+
+    return testUtils.deleteS3Object(bucketName, inputFileName)
+    .then(() => {
+      return new Promise((resolve, reject) => {
+        s3FileSystem.writeAsStream(inputFileName, bucketName, aStream, (err, data) => {
+          resolve()
+        })
+      })
+    })
+    .then(() => testUtils.waitUntilS3ObjectExists(bucketName, inputFileName))
+    .then((data) => {
+      let fileContent = (data.Body) ? data.Body.toString() : ""
+
+      assert.equal(fileContent, "Lorem ipsum dolor sit amet.\n")
+    })
+  });
 })
