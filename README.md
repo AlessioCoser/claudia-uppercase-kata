@@ -53,6 +53,6 @@ npm run destroy [-- --profile your-aws-profile]
 ## Executing integration test
 
 1. Create a S3 bucket
-2. Change the bucket name in index_test.js:4
-3. Deploy the lambda
-5. `npm run test:integration` (optionally set AWS_PROFILE=[your_profile])
+2. Change the bucket name in `test/integration/s3_filesystem_test.js:8`
+3. Create/Deploy the lambda
+4. `npm run test:integration` (optionally set AWS_PROFILE=[your_profile])
