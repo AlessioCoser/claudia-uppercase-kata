@@ -7,6 +7,7 @@
     "test": "npm run test:unit && npm run test:integration && npm run test:acceptance",
     "test:unit": "mocha test/unit/**/*_test.js",
     "test:integration": "mocha test/integration/**/*_test.js",
+    "test:smoke": "mocha test/smoke/**/*_test.js",
     "test:acceptance": "mocha test/acceptance/**/*_test.js",
     "create": "claudia create --region us-east-1 --handler index.handler",
     "add-s3-event-source": "claudia add-s3-event-source --region us-east-1",
