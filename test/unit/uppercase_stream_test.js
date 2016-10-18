@@ -1,20 +1,14 @@
-var aws = require('aws-sdk');
+var Stream = require('stream')
 var assert = require('assert')
-
 var uppercaseStream = require("../../lib/uppercase_stream")
-
-var Stream = require('stream');
 
 
 describe('UppercaseStream', function(){
   it('converts stream to uppercase', function(done){
+    var stream = new Stream()
 
-    var stream = new Stream();
-
-    outputStream = uppercaseStream(stream);
-
-    outputStream.on('data', function(chunk) {
-      console.log(chunk.toString());
+    uppercaseStream(stream)
+    .on('data', function(chunk) {
       assert.equal(chunk.toString(), "QUESTA È UNA MIA STRINGA")
       done()
     })
