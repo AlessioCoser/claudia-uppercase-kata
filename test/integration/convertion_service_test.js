@@ -8,7 +8,7 @@ var uppercaseStream = require("../../lib/uppercase_stream")
 var convertionService = require("../../lib/convertion_service")
 
 
-describe('ConversionService', function(){
+describe('ConvertionService', function(){
   let validEvent = {"Records": [{
     eventSource: "aws:s3",
     s3: {
