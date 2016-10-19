@@ -29,6 +29,7 @@
     "claudia": "^2.0.2"
   },
   "devDependencies": {
-    "mocha": "^3.1.0"
+    "mocha": "^3.1.0",
+    "sinon": "^1.17.6"
   }
 }
