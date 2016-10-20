@@ -9,6 +9,8 @@
     "test:integration": "mocha test/integration/**/*_test.js",
     "test:smoke": "mocha test/smoke/**/*_test.js",
     "test:acceptance": "mocha test/acceptance/**/*_test.js",
+    "lint": "xo --env=node --env=mocha",
+    "lint:fix": "xo --env=node --env=mocha --fix",
     "create": "claudia create --region us-east-1 --handler index.handler",
     "add-s3-event-source": "claudia add-s3-event-source --region us-east-1",
     "deploy": "claudia update",
@@ -31,5 +33,9 @@
   "devDependencies": {
     "mocha": "^3.1.0",
     "sinon": "^1.17.6"
+  },
+  "xo": {
+    "semicolon": false,
+    "space": true
   }
 }

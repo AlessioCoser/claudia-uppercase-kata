@@ -1,20 +1,16 @@
-var fs = require('fs');
-var aws = require('aws-sdk');
+var fs = require('fs')
 var assert = require('assert')
-var Stream = require('stream');
 var testUtils = require('../test_utils')
 var S3FileSystem = require('../../lib/s3_filesystem')
 
-var bucketName = "claudia-uppercase-kata"
-var inputFileName = "inputfile.txt"
-var outputFileName = "outputfile.txt"
+var bucketName = 'claudia-uppercase-kata'
+var inputFileName = 'inputfile.txt'
 
-
-describe('S3FileSystem', function(){
-  it('reads from S3 Bucket', function(done){
+describe('S3FileSystem', function () {
+  it('reads from S3 Bucket', function (done) {
     this.timeout(30000)
 
-    var inputContent = "lorem ipsum dolor sit amet."
+    var inputContent = 'lorem ipsum dolor sit amet.'
 
     testUtils.deleteS3Object(bucketName, inputFileName)
     .then(() => testUtils.putS3Object(bucketName, inputFileName, inputContent))
@@ -23,9 +19,9 @@ describe('S3FileSystem', function(){
       var data = []
 
       s3FileSystem.readAsStream(inputFileName, bucketName)
-      .on('data', (chunk) => data.push(chunk))
+      .on('data', chunk => data.push(chunk))
       .on('end', () => {
-        assert.equal(String.prototype.concat(data), "lorem ipsum dolor sit amet.")
+        assert.equal(String.prototype.concat(data), 'lorem ipsum dolor sit amet.')
         done()
       })
     })
@@ -39,10 +35,10 @@ describe('S3FileSystem', function(){
     return testUtils.deleteS3Object(bucketName, inputFileName)
     .then(() => s3FileSystem.writeAsStream(inputFileName, bucketName, aStream))
     .then(() => testUtils.waitUntilS3ObjectExists(bucketName, inputFileName))
-    .then((data) => {
-      let fileContent = (data.Body) ? data.Body.toString() : ""
+    .then(data => {
+      let fileContent = (data.Body) ? data.Body.toString() : ''
 
-      assert.equal(fileContent, "Lorem ipsum dolor sit amet.\n")
+      assert.equal(fileContent, 'Lorem ipsum dolor sit amet.\n')
     })
-  });
+  })
 })
