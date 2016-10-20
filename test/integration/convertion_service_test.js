@@ -17,17 +17,17 @@ describe('ConvertionService', function(){
     }
   }]}
 
-  it('returns error for missing event', function(done){
-    convertionService(null, null, null, function(err){
+  it('returns error for missing event', function(){
+    return convertionService(null, null, null)
+    .catch(function(err) {
       assert.equal(err, "Event not specified")
-      done()
     })
   })
 
-  it('returns error for invalid event', function(done){
-    convertionService(new EventParser({}), null, null, function(err){
+  it('returns error for invalid event', function(){
+    return convertionService(new EventParser({}), null, null)
+    .catch(function(err){
       assert.equal(err, "Event is not valid")
-      done()
     })
   })
 
