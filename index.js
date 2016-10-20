@@ -5,11 +5,6 @@ var convertionService = require('./lib/convertion_service')
 
 exports.handler = function (event, context) {
   convertionService(new EventParser(event), new FileSystem(), uppercaseStream)
-  .then(function(err, data) {
-    if(err) {
-      context.fail(err)
-    }else {
-      context.done(data)
-    }
-  })
+  .then(context.done)
+  .catch(context.fail)
 }
