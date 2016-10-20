@@ -37,13 +37,7 @@ describe('S3FileSystem', function(){
     var aStream = fs.createReadStream('./inputfile.txt')
 
     return testUtils.deleteS3Object(bucketName, inputFileName)
-    .then(() => {
-      return new Promise((resolve, reject) => {
-        s3FileSystem.writeAsStream(inputFileName, bucketName, aStream, (err, data) => {
-          resolve()
-        })
-      })
-    })
+    .then(() => s3FileSystem.writeAsStream(inputFileName, bucketName, aStream))
     .then(() => testUtils.waitUntilS3ObjectExists(bucketName, inputFileName))
     .then((data) => {
       let fileContent = (data.Body) ? data.Body.toString() : ""
