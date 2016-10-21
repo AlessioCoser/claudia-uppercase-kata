@@ -32,8 +32,9 @@ describe('ConvertionService', function () {
 
   it('calls uppercasedStream function', function () {
     const uppercaseStreamSpy = sinon.spy(uppercaseStream)
+    const fileSystem = new S3FileSystem()
 
-    convertionService(new EventParser(validEvent), new S3FileSystem(), uppercaseStreamSpy)
+    convertionService(new EventParser(validEvent), fileSystem, uppercaseStreamSpy)
 
     assert(uppercaseStreamSpy.called, true)
   })
