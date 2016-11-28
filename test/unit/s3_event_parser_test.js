@@ -1,7 +1,7 @@
 var assert = require('assert')
-var S3eventParser = require('../../lib/s3_event_parser')
+var S3EventAdapter = require('../../lib/s3_event_adapter')
 
-describe('S3EventParser', function () {
+describe('S3EventAdapter', function () {
   let validEvent = {Records: [{
     eventSource: 'aws:s3',
     s3: {
@@ -12,26 +12,26 @@ describe('S3EventParser', function () {
 
   it('returns false for invalid s3 Event', function () {
     var event = {}
-    var eventParser = new S3eventParser(event)
+    var eventAdapter = new S3EventAdapter(event)
 
-    assert.equal(eventParser.isValid(), false)
+    assert.equal(eventAdapter.isValid(), false)
   })
 
   it('returns true for valid s3 Event', function () {
-    var eventParser = new S3eventParser(validEvent)
+    var eventAdapter = new S3EventAdapter(validEvent)
 
-    assert.equal(eventParser.isValid(), true)
+    assert.equal(eventAdapter.isValid(), true)
   })
 
   it('returns bucket for valid s3 Event', function () {
-    var eventParser = new S3eventParser(validEvent)
+    var eventAdapter = new S3EventAdapter(validEvent)
 
-    assert.equal(eventParser.getBucket(), 'my_bucket')
+    assert.equal(eventAdapter.getFolder(), 'my_bucket')
   })
 
   it('returns fileKey for valid s3 Event', function () {
-    var eventParser = new S3eventParser(validEvent)
+    var eventAdapter = new S3EventAdapter(validEvent)
 
-    assert.equal(eventParser.getFileKey(), 'my_filekey')
+    assert.equal(eventAdapter.getFileName(), 'my_filekey')
   })
 })

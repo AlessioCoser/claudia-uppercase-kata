@@ -2,7 +2,7 @@ var assert = require('assert')
 var Stream = require('stream')
 var sinon = require('sinon')
 
-var EventParser = require('../../lib/s3_event_parser')
+var Event = require('../../lib/s3_event_adapter')
 var S3FileSystem = require('../../lib/s3_filesystem')
 var uppercaseStream = require('../../lib/uppercase_stream')
 var convertionService = require('../../lib/convertion_service')
@@ -24,7 +24,7 @@ describe('ConvertionService', function () {
   })
 
   it('returns error for invalid event', function () {
-    return convertionService(new EventParser({}), null, null)
+    return convertionService(new Event({}), null, null)
     .catch(function (err) {
       assert.equal(err, 'Event is not valid')
     })
@@ -34,7 +34,7 @@ describe('ConvertionService', function () {
     const uppercaseStreamSpy = sinon.spy(uppercaseStream)
     const fileSystem = new S3FileSystem()
 
-    convertionService(new EventParser(validEvent), fileSystem, uppercaseStreamSpy)
+    convertionService(new Event(validEvent), fileSystem, uppercaseStreamSpy)
 
     assert(uppercaseStreamSpy.called, true)
   })
@@ -46,7 +46,7 @@ describe('ConvertionService', function () {
     fileSystemMock.expects('readAsStream').returns(new Stream()).once()
     fileSystemMock.expects('writeAsStream').withArgs('outputfile.txt', 'my-bucket').once()
 
-    convertionService(new EventParser(validEvent), fileSystem, uppercaseStream)
+    convertionService(new Event(validEvent), fileSystem, uppercaseStream)
 
     fileSystemMock.verify()
   })
