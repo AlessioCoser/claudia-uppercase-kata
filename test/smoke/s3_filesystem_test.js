@@ -3,7 +3,7 @@ var assert = require('assert')
 var testUtils = require('../test_utils')
 var S3FileSystem = require('../../lib/s3_filesystem')
 
-var bucketName = 'claudia-uppercase-kata'
+var folder = 'claudia-uppercase-kata'
 var inputFileName = 'inputfile.txt'
 
 describe('S3FileSystem', function () {
@@ -12,13 +12,13 @@ describe('S3FileSystem', function () {
 
     var inputContent = 'lorem ipsum dolor sit amet.'
 
-    testUtils.deleteS3Object(bucketName, inputFileName)
-    .then(() => testUtils.putS3Object(bucketName, inputFileName, inputContent))
+    testUtils.deleteS3Object(folder, inputFileName)
+    .then(() => testUtils.putS3Object(folder, inputFileName, inputContent))
     .then(() => {
       var s3FileSystem = new S3FileSystem()
       var data = []
 
-      s3FileSystem.readAsStream(inputFileName, bucketName)
+      s3FileSystem.readAsStream(folder, inputFileName)
       .on('data', chunk => data.push(chunk))
       .on('end', () => {
         assert.equal(String.prototype.concat(data), 'lorem ipsum dolor sit amet.')
@@ -32,9 +32,9 @@ describe('S3FileSystem', function () {
     var s3FileSystem = new S3FileSystem()
     var aStream = fs.createReadStream('./inputfile.txt')
 
-    return testUtils.deleteS3Object(bucketName, inputFileName)
-    .then(() => s3FileSystem.writeAsStream(inputFileName, bucketName, aStream))
-    .then(() => testUtils.waitUntilS3ObjectExists(bucketName, inputFileName))
+    return testUtils.deleteS3Object(folder, inputFileName)
+    .then(() => s3FileSystem.writeAsStream(folder, inputFileName, aStream))
+    .then(() => testUtils.waitUntilS3ObjectExists(folder, inputFileName))
     .then(data => {
       let fileContent = (data.Body) ? data.Body.toString() : ''
 

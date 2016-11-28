@@ -44,7 +44,7 @@ describe('ConvertionService', function () {
     const fileSystemMock = sinon.mock(fileSystem)
 
     fileSystemMock.expects('readAsStream').returns(new Stream()).once()
-    fileSystemMock.expects('writeAsStream').withArgs('outputfile.txt', 'my-bucket').once()
+    fileSystemMock.expects('writeAsStream').withArgs('my-bucket', 'outputfile.txt').once()
 
     convertionService(new Event(validEvent), fileSystem, uppercaseStream)
 
